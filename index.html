@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Default Risk Predictor - Browser Edition</title>
+    <title>Default Risk Predictor — Explainable AI Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4b 50%, #0f1538 100%);
             min-height: 100vh;
             color: #e0e0e0;
             padding: 20px;
+            line-height: 1.6;
         }
         .container { max-width: 1200px; margin: 0 auto; }
-        header { text-align: center; padding: 30px 20px; }
+
+        header { text-align: center; padding: 30px 20px 20px; }
         header h1 { font-size: 2.2rem; color: #00d4ff; text-shadow: 0 0 20px rgba(0,212,255,0.3); margin-bottom: 8px; }
         header p { color: #a0a0c0; font-size: 1rem; }
-        .badge { display: inline-block; background: rgba(0,212,255,0.15); color: #00d4ff; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; margin-top: 10px; border: 1px solid rgba(0,212,255,0.3); }
+        .badge { display: inline-block; background: rgba(0,212,255,0.12); color: #00d4ff; padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; margin-top: 12px; border: 1px solid rgba(0,212,255,0.25); }
 
         .upload-zone {
             background: rgba(255,255,255,0.03);
             border: 2px dashed rgba(0,212,255,0.3);
             border-radius: 20px;
-            padding: 50px 30px;
+            padding: 45px 30px;
             text-align: center;
-            margin: 20px 0 30px;
+            margin: 20px 0 25px;
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -35,9 +37,9 @@
             background: rgba(0,212,255,0.05);
             box-shadow: 0 0 40px rgba(0,212,255,0.1);
         }
-        .upload-zone .icon { font-size: 3.5rem; margin-bottom: 15px; }
-        .upload-zone h3 { font-size: 1.3rem; margin-bottom: 8px; color: #c0c0e0; }
-        .upload-zone p { color: #8080a0; font-size: 0.9rem; margin-bottom: 20px; }
+        .upload-zone .icon { font-size: 3.2rem; margin-bottom: 12px; }
+        .upload-zone h3 { font-size: 1.2rem; margin-bottom: 6px; color: #c0c0e0; }
+        .upload-zone p { color: #8080a0; font-size: 0.88rem; margin-bottom: 18px; }
         .btn {
             background: linear-gradient(135deg, #00d4ff, #0099cc);
             color: white; border: none; padding: 12px 35px;
@@ -48,9 +50,19 @@
         #fileInput { display: none; }
         .file-name { margin-top: 12px; color: #00d4ff; font-size: 0.9rem; }
 
-        .loading {
-            display: none; text-align: center; padding: 40px;
+        .sample-btn {
+            display: block; margin: 14px auto 0;
+            background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.05));
+            border: 2px solid rgba(0,212,255,0.5); color: #00d4ff;
+            padding: 10px 28px; border-radius: 25px; cursor: pointer;
+            font-size: 0.9rem; font-weight: 600; transition: all 0.3s;
         }
+        .sample-btn:hover {
+            background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,212,255,0.1));
+            transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,212,255,0.2);
+        }
+
+        .loading { display: none; text-align: center; padding: 40px; }
         .loading.active { display: block; }
         .spinner {
             width: 45px; height: 45px;
@@ -61,50 +73,61 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        .error {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+            color: #ff6b6b; padding: 18px; border-radius: 12px;
+            margin-top: 20px; display: none;
+        }
+        .error.active { display: block; }
+
         .results { display: none; }
         .results.active { display: block; }
 
+        /* Summary Cards */
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px; margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px; margin-bottom: 25px;
         }
         .summary-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px; padding: 20px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px; padding: 18px 12px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.06);
             backdrop-filter: blur(10px);
         }
-        .summary-card .num { font-size: 2.2rem; font-weight: bold; }
-        .summary-card .lbl { font-size: 0.8rem; color: #a0a0c0; margin-top: 4px; }
+        .summary-card .num { font-size: 2rem; font-weight: bold; }
+        .summary-card .lbl { font-size: 0.78rem; color: #a0a0c0; margin-top: 3px; }
         .c-pos { color: #00ff88; }
         .c-neu { color: #ffcc00; }
         .c-neg { color: #ff6b6b; }
         .c-def { color: #ff3333; }
 
+        /* Results Table */
         .table-wrap {
             background: rgba(255,255,255,0.03);
             border-radius: 15px; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 25px;
         }
         .table-wrap h2 {
-            padding: 18px 22px;
+            padding: 16px 20px;
             background: rgba(0,212,255,0.08);
-            font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         table { width: 100%; border-collapse: collapse; }
         th {
             background: rgba(0,212,255,0.04);
-            padding: 12px 18px; text-align: left;
-            font-size: 0.75rem; text-transform: uppercase;
+            padding: 11px 16px; text-align: left;
+            font-size: 0.72rem; text-transform: uppercase;
             letter-spacing: 1px; color: #00d4ff; font-weight: 600;
         }
-        td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+        td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; vertical-align: top; }
         tr:hover { background: rgba(255,255,255,0.02); }
 
         .risk-tag {
             display: inline-block; padding: 5px 14px;
-            border-radius: 15px; font-size: 0.78rem;
+            border-radius: 15px; font-size: 0.76rem;
             font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
         }
         .tag-pos { background: rgba(0,255,136,0.12); color: #00ff88; border: 1px solid rgba(0,255,136,0.25); }
@@ -115,7 +138,7 @@
         .conf-bar {
             width: 100%; height: 6px;
             background: rgba(255,255,255,0.1);
-            border-radius: 3px; overflow: hidden; margin-top: 5px;
+            border-radius: 3px; overflow: hidden; margin-top: 4px;
         }
         .conf-fill {
             height: 100%; border-radius: 3px;
@@ -123,12 +146,12 @@
         }
 
         .prob-stack {
-            display: flex; height: 22px; border-radius: 11px;
-            overflow: hidden; margin-top: 6px; gap: 2px;
+            display: flex; height: 20px; border-radius: 10px;
+            overflow: hidden; margin-top: 5px; gap: 2px;
         }
         .prob-seg {
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; font-weight: bold; color: #fff;
+            font-size: 0.62rem; font-weight: bold; color: #fff;
             transition: width 0.5s ease; min-width: 0;
         }
         .seg-pos { background: #00c853; }
@@ -136,41 +159,125 @@
         .seg-neg { background: #ff5252; }
         .seg-def { background: #d50000; }
 
-        .error {
-            background: rgba(255,107,107,0.1);
-            border: 1px solid rgba(255,107,107,0.3);
-            color: #ff6b6b; padding: 18px; border-radius: 12px;
-            margin-top: 20px; display: none;
-        }
-        .error.active { display: block; }
-
-        .sample-btn {
-            background: transparent; border: 1px solid rgba(0,212,255,0.4);
-            color: #00d4ff; padding: 8px 20px; border-radius: 20px;
-            cursor: pointer; font-size: 0.85rem; margin-top: 12px;
+        /* Explain Button */
+        .explain-btn {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #00d4ff;
+            padding: 5px 14px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            cursor: pointer;
             transition: all 0.3s;
+            margin-top: 6px;
         }
-        .sample-btn:hover { background: rgba(0,212,255,0.1); }
+        .explain-btn:hover {
+            background: rgba(0,212,255,0.2);
+        }
+
+        /* Explanation Panel */
+        .explanation-panel {
+            display: none;
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .explanation-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation-panel h4 {
+            color: #00d4ff;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation-panel .summary-text {
+            color: #c0c0e0;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .flags-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        .flag-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            border: 1px solid transparent;
+        }
+        .flag-pos { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.2); color: #a0ffc0; }
+        .flag-neu { background: rgba(255,204,0,0.08); border-color: rgba(255,204,0,0.2); color: #ffe680; }
+        .flag-neg { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.2); color: #ffb3b3; }
+
+        .flag-emoji { font-size: 1.1rem; }
+        .flag-text { flex: 1; }
+        .flag-metric { font-weight: 600; color: #fff; }
+        .flag-value { font-family: 'SF Mono', monospace; font-size: 0.9rem; }
+
+        .decision-path {
+            margin-top: 14px;
+            padding: 12px;
+            background: rgba(0,212,255,0.04);
+            border-radius: 8px;
+        }
+        .decision-path h5 {
+            color: #7ee787;
+            font-size: 0.82rem;
+            margin-bottom: 8px;
+        }
+        .path-step {
+            font-size: 0.8rem;
+            color: #a0a0c0;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .path-step:last-child { border-bottom: none; }
+        .path-step strong { color: #00d4ff; }
 
         @media (max-width: 768px) {
             header h1 { font-size: 1.6rem; }
             .upload-zone { padding: 35px 20px; }
-            th, td { padding: 10px 12px; font-size: 0.8rem; }
+            th, td { padding: 10px 12px; font-size: 0.82rem; }
+            .flags-grid { grid-template-columns: 1fr; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🏦 Default Risk Predictor</h1>
-            <p>Predict company default risk using 3 years of financial data — runs entirely in your browser</p>
+            <p>AI-powered risk analysis with explainable predictions — runs entirely in your browser</p>
             <span class="badge">🔒 100% Private — No data leaves your computer</span>
         </header>
 
         <div class="upload-zone" id="dropZone">
             <div class="icon">📁</div>
             <h3>Drop your CSV file here or click to browse</h3>
-            <p>Upload a CSV with Balance Sheet & Income Statement data for 2023, 2024, 2025</p>
+            <p>Upload a CSV with 3 years of Balance Sheet & Income Statement data for 2023, 2024, 2025</p>
             <input type="file" id="fileInput" accept=".csv">
             <button class="btn" id="chooseBtn">Choose File</button>
             <div class="file-name" id="fileName"></div>
@@ -186,6 +293,7 @@
 
         <div class="results" id="results">
             <div class="summary-grid" id="summaryGrid"></div>
+
             <div class="table-wrap">
                 <h2>📊 Detailed Risk Analysis</h2>
                 <table>
@@ -195,6 +303,7 @@
                             <th>Risk Rating</th>
                             <th>Confidence</th>
                             <th>Probability Distribution</th>
+                            <th>Explanation</th>
                         </tr>
                     </thead>
                     <tbody id="resultsBody"></tbody>
@@ -215,7 +324,7 @@
             'Future Default': { color: 'c-def', tag: 'tag-def', seg: 'seg-def', label: 'Critical' }
         };
 
-        // ===== FEATURE ENGINEERING (mirrors Python logic) =====
+        // ===== FEATURE ENGINEERING =====
         function computeFeatures(row) {
             const f = {};
             const years = [2023, 2024, 2025];
@@ -278,7 +387,6 @@
             f['CurrentRatio_Trend'] = f['Current Ratio_2025'] - f['Current Ratio_2023'];
             f['ROA_Trend'] = f['ROA_2025'] - f['ROA_2023'];
 
-            // Handle infinities and NaN
             for (const k in f) {
                 if (!isFinite(f[k]) || isNaN(f[k])) f[k] = 0;
             }
@@ -286,30 +394,111 @@
             return f;
         }
 
-        // ===== TREE PREDICTION =====
-        function predictTree(features, node) {
-            if (node.type === 'leaf') {
-                // For a single tree, we return the class with confidence
-                return { class: node.class, confidence: node.confidence };
+        // ===== TREE PREDICTION WITH PATH TRACING =====
+        function predictWithExplanation(features) {
+            let node = treeModel;
+            const path = [];
+
+            while (node.type !== 'leaf') {
+                const val = features[node.feature] || 0;
+                const threshold = node.threshold;
+                const goesLeft = val <= threshold;
+
+                path.push({
+                    feature: node.feature,
+                    value: val,
+                    threshold: threshold,
+                    goesLeft: goesLeft,
+                    reason: `${node.feature} = ${val.toFixed(3)} ${goesLeft ? '≤' : '>'} ${threshold.toFixed(3)}`
+                });
+
+                node = goesLeft ? node.left : node.right;
             }
-            const val = features[node.feature] || 0;
-            if (val <= node.threshold) {
-                return predictTree(features, node.left);
-            } else {
-                return predictTree(features, node.right);
-            }
+
+            return {
+                class: node.class,
+                confidence: node.confidence,
+                path: path
+            };
         }
 
-        function predictAll(features) {
-            // Simple prediction with pseudo-probabilities based on confidence
-            const result = predictTree(features, treeModel);
-            const probs = {};
-            RISK_CLASSES.forEach(c => probs[c] = 5); // base probability
-            probs[result.class] = result.confidence;
-            // Normalize
-            const total = Object.values(probs).reduce((a,b) => a+b, 0);
-            for (const k in probs) probs[k] = (probs[k] / total) * 100;
-            return { class: result.class, confidence: result.confidence, probabilities: probs };
+        // ===== EXPLAINABLE AI: GENERATE HUMAN-READABLE EXPLANATION =====
+        function generateExplanation(companyName, features, prediction, path) {
+            const keyMetrics = {
+                'Current Ratio_2025': { good: 1.5, warning: 1.0, label: 'Current Ratio (2025)', format: 'ratio', inverse: false },
+                'Quick Ratio_2025': { good: 1.0, warning: 0.5, label: 'Quick Ratio (2025)', format: 'ratio', inverse: false },
+                'Debt to Equity_2025': { good: 0.5, warning: 1.0, label: 'Debt-to-Equity (2025)', format: 'ratio', inverse: true },
+                'Net Profit Margin_2025': { good: 0.10, warning: 0.05, label: 'Net Profit Margin (2025)', format: 'percent', inverse: false },
+                'ROA_2025': { good: 0.05, warning: 0.02, label: 'Return on Assets (2025)', format: 'percent', inverse: false },
+                'ROE_2025': { good: 0.10, warning: 0.05, label: 'Return on Equity (2025)', format: 'percent', inverse: false },
+                'Interest Coverage_2025': { good: 3.0, warning: 1.5, label: 'Interest Coverage (2025)', format: 'ratio', inverse: false },
+                'Revenue_Trend': { good: 0.10, warning: 0.0, label: 'Revenue Growth (2023→2025)', format: 'percent', inverse: false },
+                'NetIncome_Trend': { good: 0.10, warning: 0.0, label: 'Net Income Growth (2023→2025)', format: 'percent', inverse: false },
+                'Gross Margin_2025': { good: 0.30, warning: 0.20, label: 'Gross Margin (2025)', format: 'percent', inverse: false },
+            };
+
+            const flags = [];
+            for (const [metric, config] of Object.entries(keyMetrics)) {
+                if (!(metric in features)) continue;
+                const value = features[metric];
+                if (!isFinite(value)) continue;
+
+                let status, emoji;
+                if (config.inverse) {
+                    if (value <= config.good) { status = 'pos'; emoji = '✅'; }
+                    else if (value <= config.warning) { status = 'neu'; emoji = '⚠️'; }
+                    else { status = 'neg'; emoji = '❌'; }
+                } else {
+                    if (value >= config.good) { status = 'pos'; emoji = '✅'; }
+                    else if (value >= config.warning) { status = 'neu'; emoji = '⚠️'; }
+                    else { status = 'neg'; emoji = '❌'; }
+                }
+
+                let formatted;
+                if (config.format === 'percent') formatted = (value * 100).toFixed(1) + '%';
+                else formatted = value.toFixed(2);
+
+                flags.push({ metric: config.label, value: formatted, status, emoji });
+            }
+
+            flags.sort((a, b) => { 
+                const order = {'neg': 0, 'neu': 1, 'pos': 2};
+                return order[a.status] - order[b.status];
+            });
+
+            const redFlags = flags.filter(f => f.status === 'neg');
+            const greenFlags = flags.filter(f => f.status === 'pos');
+            const yellowFlags = flags.filter(f => f.status === 'neu');
+
+            let summary = `Based on our AI analysis of ${companyName}'s financial data from 2023-2025, `;
+
+            if (prediction === 'Positive') {
+                summary += `the company demonstrates <strong>STRONG financial health</strong>. `;
+                if (greenFlags.length > 0) {
+                    summary += `${greenFlags.length} key financial indicators are in healthy ranges, including particularly strong ${greenFlags[0].metric.toLowerCase()}.`;
+                }
+            } else if (prediction === 'Neutral') {
+                summary += `the company shows <strong>MODERATE financial stability</strong>. `;
+                if (redFlags.length > 0 && greenFlags.length > 0) {
+                    summary += `There are ${redFlags.length} areas of concern alongside ${greenFlags.length} positive indicators.`;
+                } else if (redFlags.length > 0) {
+                    summary += `${redFlags.length} financial metrics require attention.`;
+                } else {
+                    summary += `Financial metrics are generally stable but not exceptional.`;
+                }
+            } else if (prediction === 'Negative') {
+                summary += `the company shows <strong>SIGNS OF FINANCIAL DISTRESS</strong>. `;
+                if (redFlags.length > 0) {
+                    summary += `${redFlags.length} critical concerns identified, particularly in ${redFlags[0].metric.toLowerCase()}.`;
+                }
+            } else {
+                summary += `the company is at <strong>CRITICAL FINANCIAL RISK</strong>. `;
+                if (redFlags.length > 0) {
+                    summary += `${redFlags.length} severe red flags detected across key financial dimensions. Immediate attention is strongly recommended.`;
+                }
+            }
+
+            return { summary, flags, path };
         }
 
         // ===== SAMPLE DATA =====
@@ -360,13 +549,8 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
                 header: true,
                 dynamicTyping: true,
                 skipEmptyLines: true,
-                complete: function(res) {
-                    processData(res.data);
-                },
-                error: function(err) {
-                    loading.classList.remove('active');
-                    showError('CSV parse error: ' + err.message);
-                }
+                complete: function(res) { processData(res.data); },
+                error: function(err) { loading.classList.remove('active'); showError('CSV parse error: ' + err.message); }
             });
         }
 
@@ -380,28 +564,42 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
                 header: true,
                 dynamicTyping: true,
                 skipEmptyLines: true,
-                complete: function(res) {
-                    processData(res.data);
-                }
+                complete: function(res) { processData(res.data); }
             });
         }
 
         function processData(rows) {
             setTimeout(() => {
                 try {
-                    const predictions = rows.map(row => {
+                    const predictions = rows.map((row, idx) => {
                         const features = computeFeatures(row);
-                        const pred = predictAll(features);
+                        const pred = predictWithExplanation(features);
+                        const explanation = generateExplanation(
+                            row['Customer Name'] || 'Unknown',
+                            features,
+                            pred.class,
+                            pred.path
+                        );
+
+                        // Simple probability distribution
+                        const probs = {};
+                        RISK_CLASSES.forEach(c => probs[c] = 5);
+                        probs[pred.class] = pred.confidence;
+                        const total = Object.values(probs).reduce((a,b) => a+b, 0);
+                        for (const k in probs) probs[k] = (probs[k] / total) * 100;
+
                         return {
                             company: row['Customer Name'] || 'Unknown',
                             risk: pred.class,
                             confidence: pred.confidence,
-                            probs: pred.probabilities
+                            probs: probs,
+                            explanation: explanation
                         };
                     });
                     displayResults(predictions);
                 } catch (e) {
                     showError('Error: ' + e.message);
+                    console.error(e);
                 }
                 loading.classList.remove('active');
             }, 500);
@@ -434,9 +632,23 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
                 </div>
             `;
 
-            resultsBody.innerHTML = predictions.map(p => {
+            resultsBody.innerHTML = predictions.map((p, idx) => {
                 const meta = RISK_META[p.risk];
                 const confColor = p.confidence > 80 ? '#00ff88' : p.confidence > 50 ? '#ffcc00' : '#ff6b6b';
+
+                const flagsHtml = p.explanation.flags.map(f => `
+                    <div class="flag-item flag-${f.status}">
+                        <span class="flag-emoji">${f.emoji}</span>
+                        <span class="flag-text">
+                            <span class="flag-metric">${f.metric}</span>
+                            <span class="flag-value">${f.value}</span>
+                        </span>
+                    </div>
+                `).join('');
+
+                const pathHtml = p.explanation.path.map((step, i) => `
+                    <div class="path-step">Step ${i+1}: <strong>${step.feature}</strong> = ${step.value.toFixed(3)} ${step.goesLeft ? '≤' : '>'} ${step.threshold.toFixed(3)} → go ${step.goesLeft ? 'left' : 'right'}</div>
+                `).join('');
 
                 return `
                     <tr>
@@ -458,11 +670,20 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
                                 <div class="prob-seg seg-neg" style="width:${p.probs['Negative'].toFixed(1)}%">${p.probs['Negative'] > 12 ? p.probs['Negative'].toFixed(0)+'%' : ''}</div>
                                 <div class="prob-seg seg-def" style="width:${p.probs['Future Default'].toFixed(1)}%">${p.probs['Future Default'] > 12 ? p.probs['Future Default'].toFixed(0)+'%' : ''}</div>
                             </div>
-                            <div style="display:flex;gap:10px;margin-top:4px;font-size:0.7rem;color:#888">
-                                <span>🟢 ${p.probs['Positive'].toFixed(1)}%</span>
-                                <span>🟡 ${p.probs['Neutral'].toFixed(1)}%</span>
-                                <span>🔴 ${p.probs['Negative'].toFixed(1)}%</span>
-                                <span>🟣 ${p.probs['Future Default'].toFixed(1)}%</span>
+                        </td>
+                        <td>
+                            <button class="explain-btn" onclick="toggleExplanation(${idx})">🔍 Why this rating?</button>
+                            <div class="explanation-panel" id="exp-${idx}">
+                                <h4>📋 AI Explanation</h4>
+                                <div class="summary-text">${p.explanation.summary}</div>
+
+                                <h4>🚦 Key Financial Flags</h4>
+                                <div class="flags-grid">${flagsHtml}</div>
+
+                                <div class="decision-path">
+                                    <h5>🧠 Model Decision Path</h5>
+                                    ${pathHtml}
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -472,6 +693,14 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
             results.classList.add('active');
             results.scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Toggle explanation panel
+        window.toggleExplanation = function(idx) {
+            const panel = document.getElementById('exp-' + idx);
+            panel.classList.toggle('active');
+            const btn = panel.previousElementSibling;
+            btn.textContent = panel.classList.contains('active') ? '🔼 Hide Explanation' : '🔍 Why this rating?';
+        };
     </script>
 </body>
 </html>
