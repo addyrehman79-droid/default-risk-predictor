@@ -4,7 +4,7 @@ AI-powered company default risk prediction — runs entirely in your browser.
 
 ## 🌐 Live Demo
 
-**[Click here to use the app](https://YOUR_USERNAME.github.io/default-risk-predictor)**
+**[Click here to use the app](https://addyrehman79-droid.github.io/default-risk-predictor)**
 
 *(Replace YOUR_USERNAME with your actual GitHub username after deployment)*
 
