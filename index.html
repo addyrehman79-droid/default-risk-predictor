@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" 
-content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
-    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Default Risk Predictor — Explainable AI Edition</title>
@@ -19,12 +17,12 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             line-height: 1.6;
         }
         .container { max-width: 1200px; margin: 0 auto; }
-        
+
         header { text-align: center; padding: 30px 20px 20px; }
         header h1 { font-size: 2.2rem; color: #00d4ff; text-shadow: 0 0 20px rgba(0,212,255,0.3); margin-bottom: 8px; }
         header p { color: #a0a0c0; font-size: 1rem; }
         .badge { display: inline-block; background: rgba(0,212,255,0.12); color: #00d4ff; padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; margin-top: 12px; border: 1px solid rgba(0,212,255,0.25); }
-        
+
         .upload-zone {
             background: rgba(255,255,255,0.03);
             border: 2px dashed rgba(0,212,255,0.3);
@@ -52,7 +50,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,212,255,0.3); }
         #fileInput { display: none; }
         .file-name { margin-top: 12px; color: #00d4ff; font-size: 0.9rem; }
-        
+
         .sample-btn {
             display: block; margin: 14px auto 0;
             background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.05));
@@ -64,7 +62,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,212,255,0.1));
             transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,212,255,0.2);
         }
-        
+
         .loading { display: none; text-align: center; padding: 40px; }
         .loading.active { display: block; }
         .spinner {
@@ -75,7 +73,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             margin: 0 auto 15px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
+
         .error {
             background: rgba(255,107,107,0.1);
             border: 1px solid rgba(255,107,107,0.3);
@@ -83,10 +81,10 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             margin-top: 20px; display: none;
         }
         .error.active { display: block; }
-        
+
         .results { display: none; }
         .results.active { display: block; }
-        
+
         /* Summary Cards */
         .summary-grid {
             display: grid;
@@ -105,7 +103,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .c-neu { color: #ffcc00; }
         .c-neg { color: #ff6b6b; }
         .c-def { color: #ff3333; }
-        
+
         /* Results Table */
         .table-wrap {
             background: rgba(255,255,255,0.03);
@@ -127,7 +125,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         }
         td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; vertical-align: top; }
         tr:hover { background: rgba(255,255,255,0.02); }
-        
+
         .risk-tag {
             display: inline-block; padding: 5px 14px;
             border-radius: 15px; font-size: 0.76rem;
@@ -137,7 +135,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .tag-neu { background: rgba(255,204,0,0.12); color: #ffcc00; border: 1px solid rgba(255,204,0,0.25); }
         .tag-neg { background: rgba(255,107,107,0.12); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.25); }
         .tag-def { background: rgba(255,51,51,0.12); color: #ff3333; border: 1px solid rgba(255,51,51,0.25); }
-        
+
         .conf-bar {
             width: 100%; height: 6px;
             background: rgba(255,255,255,0.1);
@@ -147,7 +145,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             height: 100%; border-radius: 3px;
             transition: width 0.6s ease;
         }
-        
+
         .prob-stack {
             display: flex; height: 20px; border-radius: 10px;
             overflow: hidden; margin-top: 5px; gap: 2px;
@@ -161,66 +159,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .seg-neu { background: #ffc107; color: #333; }
         .seg-neg { background: #ff5252; }
         .seg-def { background: #d50000; }
-        
-        /* ===== NEW: CONFIDENCE LABEL ===== */
-        .conf-label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            margin-top: 3px;
-        }
-        .conf-very-high { color: #00ff88; }
-        .conf-high { color: #7ee787; }
-        .conf-moderate { color: #ffcc00; }
-        .conf-low { color: #ff6b6b; }
-        
-        /* ===== NEW: PROBABILITY BAR WITH LABELS ===== */
-        .prob-seg-labeled {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.62rem;
-            font-weight: bold;
-            color: #fff;
-            transition: width 0.5s ease;
-            min-width: 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .prob-seg-labeled .seg-name {
-            font-size: 0.55rem;
-            opacity: 0.9;
-            white-space: nowrap;
-        }
-        .prob-seg-labeled .seg-pct {
-            font-size: 0.7rem;
-        }
-        
-        /* ===== NEW: LEGEND ===== */
-        .legend-bar {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
-            color: #a0a0c0;
-        }
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
-        }
-        .dot-pos { background: #00c853; }
-        .dot-neu { background: #ffc107; }
-        .dot-neg { background: #ff5252; }
-        .dot-def { background: #d50000; }
-        
+
         /* Explain Button */
         .explain-btn {
             background: rgba(0,212,255,0.1);
@@ -236,7 +175,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .explain-btn:hover {
             background: rgba(0,212,255,0.2);
         }
-        
+
         /* Explanation Panel */
         .explanation-panel {
             display: none;
@@ -254,7 +193,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .explanation-panel h4 {
             color: #00d4ff;
             font-size: 0.95rem;
@@ -263,7 +202,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             align-items: center;
             gap: 8px;
         }
-        
+
         .explanation-panel .summary-text {
             color: #c0c0e0;
             font-size: 0.88rem;
@@ -274,13 +213,13 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             border-radius: 8px;
             border-left: 3px solid #00d4ff;
         }
-        
+
         .flags-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 10px;
         }
-        
+
         .flag-item {
             display: flex;
             align-items: center;
@@ -293,12 +232,12 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         .flag-pos { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.2); color: #a0ffc0; }
         .flag-neu { background: rgba(255,204,0,0.08); border-color: rgba(255,204,0,0.2); color: #ffe680; }
         .flag-neg { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.2); color: #ffb3b3; }
-        
+
         .flag-emoji { font-size: 1.1rem; }
         .flag-text { flex: 1; }
         .flag-metric { font-weight: 600; color: #fff; }
         .flag-value { font-family: 'SF Mono', monospace; font-size: 0.9rem; }
-        
+
         .decision-path {
             margin-top: 14px;
             padding: 12px;
@@ -318,14 +257,74 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         }
         .path-step:last-child { border-bottom: none; }
         .path-step strong { color: #00d4ff; }
-        
+
         @media (max-width: 768px) {
             header h1 { font-size: 1.6rem; }
             .upload-zone { padding: 35px 20px; }
             th, td { padding: 10px 12px; font-size: 0.82rem; }
             .flags-grid { grid-template-columns: 1fr; }
         }
-    </style>
+    
+        /* ===== LEGEND ===== */
+        .legend-bar {{
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }}
+        .legend-item {{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            color: #a0a0c0;
+        }}
+        .legend-dot {{
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }}
+        .dot-pos {{ background: #00c853; }}
+        .dot-neu {{ background: #ffc107; }}
+        .dot-neg {{ background: #ff5252; }}
+        .dot-def {{ background: #d50000; }}
+
+        /* ===== CONFIDENCE LABEL ===== */
+        .conf-label {{
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }}
+        .conf-very-high {{ color: #00ff88; }}
+        .conf-high {{ color: #7ee787; }}
+        .conf-moderate {{ color: #ffcc00; }}
+        .conf-low {{ color: #ff6b6b; }}
+
+        /* ===== PROBABILITY BAR WITH LABELS ===== */
+        .prob-seg-labeled {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.62rem;
+            font-weight: bold;
+            color: #fff;
+            transition: width 0.5s ease;
+            min-width: 0;
+            position: relative;
+            overflow: hidden;
+        }}
+        .prob-seg-labeled .seg-name {{
+            font-size: 0.55rem;
+            opacity: 0.9;
+            white-space: nowrap;
+        }}
+        .prob-seg-labeled .seg-pct {{
+            font-size: 0.7rem;
+        }}
+</style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -354,7 +353,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
 
         <div class="results" id="results">
             <div class="summary-grid" id="summaryGrid"></div>
-            
+
             <div class="table-wrap">
                 <h2>📊 Detailed Risk Analysis</h2>
                 <table>
@@ -374,10 +373,9 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
     </div>
 
     <script>
+        // ===== EMBEDDED DECISION TREE MODEL =====
+        const treeModel = {"type": "split", "feature": "Revenue_Trend", "threshold": 0.234618, "left": {"type": "split", "feature": "Current Ratio_2023", "threshold": 1.14681, "left": {"type": "split", "feature": "Short-term Debt_2025", "threshold": 175.219994, "left": {"type": "split", "feature": "Other Comprehensive Income_2025", "threshold": 2.5, "left": {"type": "leaf", "class": "Negative", "confidence": 100.0}, "right": {"type": "split", "feature": "Selling, General & Administrative_2023", "threshold": 102.125002, "left": {"type": "leaf", "class": "Future Default", "confidence": 100.0}, "right": {"type": "leaf", "class": "Neutral", "confidence": 100.0}}}, "right": {"type": "leaf", "class": "Future Default", "confidence": 100.0}}, "right": {"type": "split", "feature": "Debt to Assets_2024", "threshold": 0.42258, "left": {"type": "leaf", "class": "Positive", "confidence": 100.0}, "right": {"type": "leaf", "class": "Neutral", "confidence": 100.0}}}, "right": {"type": "leaf", "class": "Positive", "confidence": 100.0}};
 
-            // ===== EMBEDDED DECISION TREE MODEL =====
-        const treeModel = {"type":"split","feature":"Revenue_Trend","threshold":0.235318899,"left":{"type":"split","feature":"Current Ratio_2023","threshold":1.146505475,"left":{"type":"split","feature":"Quick Ratio_2025","threshold":0.847222805,"left":{"type":"leaf","class":"Future Default","confidence":100.0},"right":{"type":"split","feature":"Short-term Debt_2025","threshold":175.1549988,"left":{"type":"leaf","class":"Negative","confidence":100.0},"right":{"type":"leaf","class":"Future Default","confidence":100.0}}},"right":{"type":"split","feature":"Current Ratio_2023","threshold":1.146505475,"left":{"type":"split","feature":"Quick Ratio_2025","threshold":0.847222805,"left":{"type":"leaf","class":"Future Default","confidence":100.0},"right":{"type":"split","feature":"Short-term Debt_2025","threshold":175.1549988,"left":{"type":"leaf","class":"Neutral","confidence":100.0},"right":{"type":"leaf","class":"Future Default","confidence":100.0}}},"right":{"type":"split","feature":"Quick Ratio_2025","threshold":0.847222805,"left":{"type":"leaf","class":"Future Default","confidence":100.0},"right":{"type":"split","feature":"Short-term Debt_2025","threshold":175.1549988,"left":{"type":"leaf","class":"Positive","confidence":100.0},"right":{"type":"leaf","class":"Future Default","confidence":100.0}}}}};
-        
         const RISK_CLASSES = ['Future Default', 'Negative', 'Neutral', 'Positive'];
         const RISK_META = {
             'Positive': { color: 'c-pos', tag: 'tag-pos', seg: 'seg-pos', label: 'Low Risk' },
@@ -390,7 +388,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         function computeFeatures(row) {
             const f = {};
             const years = [2023, 2024, 2025];
-            
+
             for (const year of years) {
                 const y = String(year);
                 const TCA = parseFloat(row['Total Current Assets_' + y]) || 0;
@@ -406,7 +404,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                 const EBIT = parseFloat(row['Operating Income (EBIT)_' + y]) || 0;
                 const IE = parseFloat(row['Interest Expense_' + y]) || 0.001;
                 const COGS = parseFloat(row['Cost of Goods Sold_' + y]) || 0;
-                
+
                 f['Current Ratio_' + y] = TCA / TCL;
                 f['Quick Ratio_' + y] = (TCA - INV) / TCL;
                 f['Cash Ratio_' + y] = CE / TCL;
@@ -419,7 +417,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                 f['Asset Turnover_' + y] = REV / TA;
                 f['Inventory Turnover_' + y] = COGS / (INV || 0.001);
                 f['Interest Coverage_' + y] = EBIT / IE;
-                
+
                 if (year > 2023) {
                     const prev = String(year - 1);
                     const prevRev = parseFloat(row['Revenue_' + prev]) || 0.001;
@@ -432,7 +430,7 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                     f['Equity Growth_' + y] = (TE - prevTE) / prevTE;
                 }
             }
-            
+
             const R23 = parseFloat(row['Revenue_2023']) || 0.001;
             const R25 = parseFloat(row['Revenue_2025']) || 0;
             const NI23 = parseFloat(row['Net Income_2023']) || 0.001;
@@ -441,18 +439,18 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             const TA25 = parseFloat(row['TOTAL ASSETS_2025']) || 0;
             const TE23 = parseFloat(row['TOTAL EQUITY_2023']) || 0.001;
             const TE25 = parseFloat(row['TOTAL EQUITY_2025']) || 0;
-            
+
             f['Revenue_Trend'] = (R25 - R23) / R23;
             f['NetIncome_Trend'] = (NI25 - NI23) / NI23;
             f['Assets_Trend'] = (TA25 - TA23) / TA23;
             f['Equity_Trend'] = (TE25 - TE23) / TE23;
             f['CurrentRatio_Trend'] = f['Current Ratio_2025'] - f['Current Ratio_2023'];
             f['ROA_Trend'] = f['ROA_2025'] - f['ROA_2023'];
-            
+
             for (const k in f) {
                 if (!isFinite(f[k]) || isNaN(f[k])) f[k] = 0;
             }
-            
+
             return f;
         }
 
@@ -460,12 +458,12 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
         function predictWithExplanation(features) {
             let node = treeModel;
             const path = [];
-            
+
             while (node.type !== 'leaf') {
                 const val = features[node.feature] || 0;
                 const threshold = node.threshold;
                 const goesLeft = val <= threshold;
-                
+
                 path.push({
                     feature: node.feature,
                     value: val,
@@ -473,10 +471,10 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                     goesLeft: goesLeft,
                     reason: `${node.feature} = ${val.toFixed(3)} ${goesLeft ? '≤' : '>'} ${threshold.toFixed(3)}`
                 });
-                
+
                 node = goesLeft ? node.left : node.right;
             }
-            
+
             return {
                 class: node.class,
                 confidence: node.confidence,
@@ -498,13 +496,13 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                 'NetIncome_Trend': { good: 0.10, warning: 0.0, label: 'Net Income Growth (2023→2025)', format: 'percent', inverse: false },
                 'Gross Margin_2025': { good: 0.30, warning: 0.20, label: 'Gross Margin (2025)', format: 'percent', inverse: false },
             };
-            
+
             const flags = [];
             for (const [metric, config] of Object.entries(keyMetrics)) {
                 if (!(metric in features)) continue;
                 const value = features[metric];
                 if (!isFinite(value)) continue;
-                
+
                 let status, emoji;
                 if (config.inverse) {
                     if (value <= config.good) { status = 'pos'; emoji = '✅'; }
@@ -515,28 +513,29 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
                     else if (value >= config.warning) { status = 'neu'; emoji = '⚠️'; }
                     else { status = 'neg'; emoji = '❌'; }
                 }
-                
+
                 let formatted;
                 if (config.format === 'percent') formatted = (value * 100).toFixed(1) + '%';
                 else formatted = value.toFixed(2);
-                
+
                 flags.push({ metric: config.label, value: formatted, status, emoji });
             }
-            
+
             flags.sort((a, b) => { 
                 const order = {'neg': 0, 'neu': 1, 'pos': 2};
                 return order[a.status] - order[b.status];
             });
-            
+
             const redFlags = flags.filter(f => f.status === 'neg');
             const greenFlags = flags.filter(f => f.status === 'pos');
-            
+            const yellowFlags = flags.filter(f => f.status === 'neu');
+
             let summary = `Based on our AI analysis of ${companyName}'s financial data from 2023-2025, `;
-            
+
             if (prediction === 'Positive') {
                 summary += `the company demonstrates <strong>STRONG financial health</strong>. `;
                 if (greenFlags.length > 0) {
-                    summary += `${greenFlags.length} key financial indicators are in healthy ranges.`;
+                    summary += `${greenFlags.length} key financial indicators are in healthy ranges, including particularly strong ${greenFlags[0].metric.toLowerCase()}.`;
                 }
             } else if (prediction === 'Neutral') {
                 summary += `the company shows <strong>MODERATE financial stability</strong>. `;
@@ -550,15 +549,15 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             } else if (prediction === 'Negative') {
                 summary += `the company shows <strong>SIGNS OF FINANCIAL DISTRESS</strong>. `;
                 if (redFlags.length > 0) {
-                    summary += `${redFlags.length} critical concerns identified.`;
+                    summary += `${redFlags.length} critical concerns identified, particularly in ${redFlags[0].metric.toLowerCase()}.`;
                 }
             } else {
                 summary += `the company is at <strong>CRITICAL FINANCIAL RISK</strong>. `;
                 if (redFlags.length > 0) {
-                    summary += `${redFlags.length} severe red flags detected. Immediate attention is strongly recommended.`;
+                    summary += `${redFlags.length} severe red flags detected across key financial dimensions. Immediate attention is strongly recommended.`;
                 }
             }
-            
+
             return { summary, flags, path };
         }
 
@@ -601,183 +600,170 @@ Demo Corp B,10,8,5,200,250,300,150,180,220,50,60,70,410,498,595,100,80,60,20,15,
 
         function handleFile(file) {
             if (!file) return;
-            fileName.textContent = '📄 ' + file.name;
+            fileName.textContent = 'Selected: ' + file.name;
+            error.classList.remove('active');
             loading.classList.add('active');
             results.classList.remove('active');
-            error.classList.remove('active');
-            
+
             Papa.parse(file, {
                 header: true,
                 dynamicTyping: true,
                 skipEmptyLines: true,
-                complete: function(results) {
-                    loading.classList.remove('active');
-                    if (results.data && results.data.length > 0) {
-                        processData(results.data);
-                    } else {
-                        showError('No data found in CSV file.');
-                    }
-                },
-                error: function(err) {
-                    loading.classList.remove('active');
-                    showError('Error parsing CSV: ' + err.message);
-                }
+                complete: function(res) { processData(res.data); },
+                error: function(err) { loading.classList.remove('active'); showError('CSV parse error: ' + err.message); }
             });
         }
 
         function runWithSample() {
-            fileName.textContent = '📄 Sample Data (2 companies)';
+            fileName.textContent = 'Using: Sample Data (2 companies)';
+            error.classList.remove('active');
             loading.classList.add('active');
             results.classList.remove('active');
-            error.classList.remove('active');
-            
-            setTimeout(() => {
-                Papa.parse(sampleData, {
-                    header: true,
-                    dynamicTyping: true,
-                    skipEmptyLines: true,
-                    complete: function(res) {
-                        loading.classList.remove('active');
-                        processData(res.data);
-                    }
-                });
-            }, 600);
+
+            Papa.parse(sampleData, {
+                header: true,
+                dynamicTyping: true,
+                skipEmptyLines: true,
+                complete: function(res) { processData(res.data); }
+            });
         }
 
         function processData(rows) {
-            const predictions = [];
-            const counts = { 'Positive': 0, 'Neutral': 0, 'Negative': 0, 'Future Default': 0 };
-            
-            for (const row of rows) {
-                if (!row['Customer Name']) continue;
-                const features = computeFeatures(row);
-                const pred = predictWithExplanation(features);
-                const explanation = generateExplanation(row['Customer Name'], features, pred.class, pred.path);
-                
-                const probs = {};
-                for (const cls of RISK_CLASSES) {
-                    probs[cls] = cls === pred.class ? pred.confidence : (100 - pred.confidence) / 3;
+            setTimeout(() => {
+                try {
+                    const predictions = rows.map((row, idx) => {
+                        const features = computeFeatures(row);
+                        const pred = predictWithExplanation(features);
+                        const explanation = generateExplanation(
+                            row['Customer Name'] || 'Unknown',
+                            features,
+                            pred.class,
+                            pred.path
+                        );
+
+                        // Simple probability distribution
+                        const probs = {};
+                        RISK_CLASSES.forEach(c => probs[c] = 5);
+                        probs[pred.class] = pred.confidence;
+                        const total = Object.values(probs).reduce((a,b) => a+b, 0);
+                        for (const k in probs) probs[k] = (probs[k] / total) * 100;
+
+                        return {
+                            company: row['Customer Name'] || 'Unknown',
+                            risk: pred.class,
+                            confidence: pred.confidence,
+                            probs: probs,
+                            explanation: explanation
+                        };
+                    });
+                    displayResults(predictions);
+                } catch (e) {
+                    showError('Error: ' + e.message);
+                    console.error(e);
                 }
-                
-                predictions.push({
-                    name: row['Customer Name'],
-                    risk: pred.class,
-                    confidence: pred.confidence,
-                    probs: probs,
-                    explanation: explanation
-                });
-                
-                counts[pred.class]++;
-            }
-            
-            renderSummary(counts, predictions.length);
-            renderTable(predictions);
-            results.classList.add('active');
+                loading.classList.remove('active');
+            }, 500);
         }
 
-        function renderSummary(counts, total) {
-            summaryGrid.innerHTML = '';
-            const items = [
-                { label: 'Total Companies', value: total, color: 'c-pos' },
-                { label: 'Low Risk', value: counts['Positive'], color: 'c-pos' },
-                { label: 'Moderate', value: counts['Neutral'], color: 'c-neu' },
-                { label: 'High Risk', value: counts['Negative'], color: 'c-neg' },
-                { label: 'Critical', value: counts['Future Default'], color: 'c-def' }
-            ];
-            
-            for (const item of items) {
-                const div = document.createElement('div');
-                div.className = 'summary-card';
-                div.innerHTML = `<div class="num ${item.color}">${item.value}</div><div class="lbl">${item.label}</div>`;
-                summaryGrid.appendChild(div);
-            }
-        }
+        function displayResults(predictions) {
+            const counts = { 'Positive': 0, 'Neutral': 0, 'Negative': 0, 'Future Default': 0 };
+            predictions.forEach(p => counts[p.risk]++);
 
-        function renderTable(predictions) {
-            resultsBody.innerHTML = '';
-            
-            for (const p of predictions) {
+            summaryGrid.innerHTML = `
+                <div class="summary-card">
+                    <div class="num" style="color:#00d4ff">${predictions.length}</div>
+                    <div class="lbl">Total Companies</div>
+                </div>
+                <div class="summary-card">
+                    <div class="num c-pos">${counts['Positive']}</div>
+                    <div class="lbl">Positive (Low Risk)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="num c-neu">${counts['Neutral']}</div>
+                    <div class="lbl">Neutral (Moderate)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="num c-neg">${counts['Negative']}</div>
+                    <div class="lbl">Negative (High Risk)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="num c-def">${counts['Future Default']}</div>
+                    <div class="lbl">Future Default</div>
+                </div>
+            `;
+
+            resultsBody.innerHTML = predictions.map((p, idx) => {
                 const meta = RISK_META[p.risk];
-                const confColor = p.confidence >= 90 ? '#00ff88' : p.confidence >= 70 ? '#7ee787' : p.confidence >= 50 ? '#ffcc00' : '#ff6b6b';
-                const confLabel = p.confidence >= 90 ? 'Very High' : p.confidence >= 70 ? 'High' : p.confidence >= 50 ? 'Moderate' : 'Low';
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${p.name}</strong></td>
-                    <td><span class="risk-tag ${meta.tag}">${p.risk}</span></td>
-                    <td>
-                        <div class="conf-label ${p.confidence >= 90 ? 'conf-very-high' : p.confidence >= 70 ? 'conf-high' : p.confidence >= 50 ? 'conf-moderate' : 'conf-low'}">
-                            ${confLabel}
-                        </div>
-                        <div style="font-size:0.75rem;color:#888;margin-top:2px">${p.confidence.toFixed(1)}%</div>
-                        <div class="conf-bar">
-                            <div class="conf-fill" style="width:${p.confidence}%;background:${confColor}"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="prob-stack">
-                            <div class="prob-seg-labeled seg-pos" style="width:${p.probs['Positive'].toFixed(1)}%" title="Positive: ${p.probs['Positive'].toFixed(1)}%">
-                                <span class="seg-name">POS</span>
-                                <span class="seg-pct">${p.probs['Positive'].toFixed(0)}%</span>
+                const confColor = p.confidence > 80 ? '#00ff88' : p.confidence > 50 ? '#ffcc00' : '#ff6b6b';
+
+                const flagsHtml = p.explanation.flags.map(f => `
+                    <div class="flag-item flag-${f.status}">
+                        <span class="flag-emoji">${f.emoji}</span>
+                        <span class="flag-text">
+                            <span class="flag-metric">${f.metric}</span>
+                            <span class="flag-value">${f.value}</span>
+                        </span>
+                    </div>
+                `).join('');
+
+                const pathHtml = p.explanation.path.map((step, i) => `
+                    <div class="path-step">Step ${i+1}: <strong>${step.feature}</strong> = ${step.value.toFixed(3)} ${step.goesLeft ? '≤' : '>'} ${step.threshold.toFixed(3)} → go ${step.goesLeft ? 'left' : 'right'}</div>
+                `).join('');
+
+                return `
+                    <tr>
+                        <td><strong>${p.company}</strong></td>
+                        <td>
+                            <span class="risk-tag ${meta.tag}">${p.risk}</span>
+                            <div style="font-size:0.7rem;color:#888;margin-top:3px">${meta.label}</div>
+                        </td>
+                        <td>
+                            <div class="conf-label ${p.confidence >= 90 ? 'conf-very-high' : p.confidence >= 70 ? 'conf-high' : p.confidence >= 50 ? 'conf-moderate' : 'conf-low'}">
+                                ${p.confidence >= 90 ? 'Very High' : p.confidence >= 70 ? 'High' : p.confidence >= 50 ? 'Moderate' : 'Low'}
                             </div>
-                            <div class="prob-seg-labeled seg-neu" style="width:${p.probs['Neutral'].toFixed(1)}%" title="Neutral: ${p.probs['Neutral'].toFixed(1)}%">
-                                <span class="seg-name">NEU</span>
-                                <span class="seg-pct">${p.probs['Neutral'].toFixed(0)}%</span>
+                            <div style="font-size:0.75rem;color:#888;margin-top:2px">${p.confidence.toFixed(1)}%</div>
+                            <div class="conf-bar">
+                                <div class="conf-fill" style="width:${p.confidence}%;background:${confColor}"></div>
                             </div>
-                            <div class="prob-seg-labeled seg-neg" style="width:${p.probs['Negative'].toFixed(1)}%" title="Negative: ${p.probs['Negative'].toFixed(1)}%">
-                                <span class="seg-name">NEG</span>
-                                <span class="seg-pct">${p.probs['Negative'].toFixed(0)}%</span>
+                        </td>
+                        <td>
+                            <div class="prob-stack">
+                                <div class="prob-seg seg-pos" style="width:${p.probs['Positive'].toFixed(1)}%">${p.probs['Positive'] > 12 ? p.probs['Positive'].toFixed(0)+'%' : ''}</div>
+                                <div class="prob-seg seg-neu" style="width:${p.probs['Neutral'].toFixed(1)}%">${p.probs['Neutral'] > 12 ? p.probs['Neutral'].toFixed(0)+'%' : ''}</div>
+                                <div class="prob-seg seg-neg" style="width:${p.probs['Negative'].toFixed(1)}%">${p.probs['Negative'] > 12 ? p.probs['Negative'].toFixed(0)+'%' : ''}</div>
+                                <div class="prob-seg seg-def" style="width:${p.probs['Future Default'].toFixed(1)}%">${p.probs['Future Default'] > 12 ? p.probs['Future Default'].toFixed(0)+'%' : ''}</div>
                             </div>
-                            <div class="prob-seg-labeled seg-def" style="width:${p.probs['Future Default'].toFixed(1)}%" title="Future Default: ${p.probs['Future Default'].toFixed(1)}%">
-                                <span class="seg-name">DEF</span>
-                                <span class="seg-pct">${p.probs['Future Default'].toFixed(0)}%</span>
+                        </td>
+                        <td>
+                            <button class="explain-btn" onclick="toggleExplanation(${idx})">🔍 Why this rating?</button>
+                            <div class="explanation-panel" id="exp-${idx}">
+                                <h4>📋 AI Explanation</h4>
+                                <div class="summary-text">${p.explanation.summary}</div>
+
+                                <h4>🚦 Key Financial Flags</h4>
+                                <div class="flags-grid">${flagsHtml}</div>
+
+                                <div class="decision-path">
+                                    <h5>🧠 Model Decision Path</h5>
+                                    ${pathHtml}
+                                </div>
                             </div>
-                        </div>
-                        <div class="legend-bar">
-                            <div class="legend-item"><div class="legend-dot dot-pos"></div>Positive</div>
-                            <div class="legend-item"><div class="legend-dot dot-neu"></div>Neutral</div>
-                            <div class="legend-item"><div class="legend-dot dot-neg"></div>Negative</div>
-                            <div class="legend-item"><div class="legend-dot dot-def"></div>Future Default</div>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="explain-btn" onclick="toggleExplain('${p.name.replace(/'/g, "\\'")}')">🔍 Why this rating?</button>
-                        <div class="explanation-panel" id="explain-${p.name.replace(/[^a-zA-Z0-9]/g, '-')}">
-                            <h4>📋 AI Explanation Summary</h4>
-                            <div class="summary-text">${p.explanation.summary}</div>
-                            <h4>🚦 Key Financial Flags</h4>
-                            <div class="flags-grid">
-                                ${p.explanation.flags.map(f => `
-                                    <div class="flag-item flag-${f.status}">
-                                        <span class="flag-emoji">${f.emoji}</span>
-                                        <div class="flag-text">
-                                            <div class="flag-metric">${f.metric}</div>
-                                            <div class="flag-value">${f.value}</div>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="decision-path">
-                                <h5>🧠 Model Decision Path</h5>
-                                ${p.explanation.path.map((step, i) => `
-                                    <div class="path-step">Step ${i+1}: <strong>${step.reason}</strong> → go ${step.goesLeft ? 'left' : 'right'}</div>
-                                `).join('')}
-                                <div class="path-step" style="color:#00ff88;font-weight:bold;margin-top:6px;">→ Final prediction: ${p.risk}</div>
-                            </div>
-                        </div>
-                    </td>
+                        </td>
+                    </tr>
                 `;
-                resultsBody.appendChild(tr);
-            }
+            }).join('');
+
+            results.classList.add('active');
+            results.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function toggleExplain(name) {
-            const safeId = 'explain-' + name.replace(/[^a-zA-Z0-9]/g, '-');
-            const panel = document.getElementById(safeId);
-            if (panel) {
-                panel.classList.toggle('active');
-            }
-        }
+        // Toggle explanation panel
+        window.toggleExplanation = function(idx) {
+            const panel = document.getElementById('exp-' + idx);
+            panel.classList.toggle('active');
+            const btn = panel.previousElementSibling;
+            btn.textContent = panel.classList.contains('active') ? '🔼 Hide Explanation' : '🔍 Why this rating?';
+        };
     </script>
 </body>
-</html>    
+</html>
