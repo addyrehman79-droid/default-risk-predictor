@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" 
-content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
+    <meta name="google-site-verification" content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Default Risk Predictor — Explainable AI Edition</title>
@@ -265,7 +264,66 @@ content="eGSrwDENzlNuohrNjTpT5rootaepGQX8-m2qPH72Jy4" />
             th, td { padding: 10px 12px; font-size: 0.82rem; }
             .flags-grid { grid-template-columns: 1fr; }
         }
-    </style>
+    
+        /* ===== LEGEND ===== */
+        .legend-bar {{
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }}
+        .legend-item {{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            color: #a0a0c0;
+        }}
+        .legend-dot {{
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }}
+        .dot-pos {{ background: #00c853; }}
+        .dot-neu {{ background: #ffc107; }}
+        .dot-neg {{ background: #ff5252; }}
+        .dot-def {{ background: #d50000; }}
+
+        /* ===== CONFIDENCE LABEL ===== */
+        .conf-label {{
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }}
+        .conf-very-high {{ color: #00ff88; }}
+        .conf-high {{ color: #7ee787; }}
+        .conf-moderate {{ color: #ffcc00; }}
+        .conf-low {{ color: #ff6b6b; }}
+
+        /* ===== PROBABILITY BAR WITH LABELS ===== */
+        .prob-seg-labeled {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.62rem;
+            font-weight: bold;
+            color: #fff;
+            transition: width 0.5s ease;
+            min-width: 0;
+            position: relative;
+            overflow: hidden;
+        }}
+        .prob-seg-labeled .seg-name {{
+            font-size: 0.55rem;
+            opacity: 0.9;
+            white-space: nowrap;
+        }}
+        .prob-seg-labeled .seg-pct {{
+            font-size: 0.7rem;
+        }}
+</style>
 <base target="_blank">
 </head>
 <body>
